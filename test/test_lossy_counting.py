@@ -4,7 +4,7 @@ import os
 import sys
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
-module_path = os.path.join(dir_path, "../util")
+module_path = os.path.join(dir_path, "../src/counter")
 print(module_path)
 if module_path not in sys.path:
     sys.path.append(module_path)
