@@ -2,7 +2,15 @@ import sentencepiece as spm
 
 
 class SentencePieceTokenizer(object):
+    '''
+    SentencePiece Tokenizer
+    '''
     def __init__(self, model_path, vocab_path):
+        '''
+        :parameters:
+            model_path: SentencePiece .model path
+            vocab_path: SentencePiece .vocab path
+        '''
         self.sp = spm.SentencePieceProcessor()
         assert self.sp.Load(model_path)
 
@@ -16,4 +24,7 @@ class SentencePieceTokenizer(object):
                 self.vocab.append(k)
 
     def encode(self, sentence):
+        '''
+        tokenize sentence using SentencePiece
+        '''
         return self.sp.EncodeAsPieces(sentence)
