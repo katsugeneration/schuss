@@ -62,3 +62,14 @@ class TestLossyCounting:
         assert_true(all([v >= lc._buckets_num for v in lc._items.values()]))
         assert_true(lc._items["で@は"] < 5 + int(symbol_num * epsilon))
         assert_true(lc._items["は@、"] < 5 + int(symbol_num * epsilon))
+
+    def test_search(self):
+        from lossy_counting import LossyCountingNGram
+        lc = LossyCountingNGram(window_size=2, epsilon=1e-2)
+        with open('data/wakati.txt', 'r', encoding='utf-8') as f:
+            lc.fit(f)
+
+        assert_equal({tuple(["する", "こと"]): 4}, lc.search(["する", "こと"]))
+        assert_equal({tuple(["する", "こと"]): 4}, lc.search(["する"]))
+        assert_equal({tuple(["SGML", "、"]): 4, tuple(["SGML", "実体"]): 4}, lc.search(["SGML"]))
+        assert_equal({}, lc.search(["てる"]))

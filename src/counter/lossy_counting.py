@@ -25,6 +25,13 @@ class LossyCountingNGram(object):
     def fit(self, X, y=None):
         self._count_ngram(X)
 
+    def search(self, X):
+        query = "@".join(X)
+        ret = {}
+        for key, value in filter(lambda x: x[0].startswith(query), self._items.items()):
+            ret[tuple(key.split("@"))] = value
+        return ret
+
     def _count_ngram(self, X):
         self._symbol_num = 0
         self._buckets_num = 0
