@@ -1,2 +1,2 @@
-# schuss
+# Schuss
 Japanese Spell Checker Using SentencePiece
