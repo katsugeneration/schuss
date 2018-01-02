@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from util.sliding import sliding_window
 
 
 class LossyCountingNGram(object):
@@ -35,7 +36,7 @@ class LossyCountingNGram(object):
             self._count_symbols(line)
 
     def _count_symbols(self, arr):
-        for s in self._sliding_window(arr, self.window_size):
+        for s in sliding_window(arr, self.window_size):
             self._symbol_num += 1
             symbol = "@".join(s)
 
@@ -53,7 +54,3 @@ class LossyCountingNGram(object):
         for key, value in filter(lambda x: x[1] >= threshold, items.items()):
             ret[key] = value
         return ret
-
-    def _sliding_window(self, arr, window_size):
-        for i in range(0, len(arr) - window_size + 1):
-            yield arr[i:i+window_size]
