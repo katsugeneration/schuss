@@ -26,6 +26,12 @@ class LossyCountingNGram(object):
         self._count_ngram(X)
 
     def search(self, X):
+        '''
+        Search start query n-gram
+
+        :parameters:
+            X: query array-like object
+        '''
         query = "@".join(X)
         ret = {}
         for key, value in filter(lambda x: x[0].startswith(query), self._items.items()):
