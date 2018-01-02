@@ -72,4 +72,5 @@ class TestLossyCounting:
         assert_equal({tuple(["する", "こと"]): 4}, lc.search(["する"]))
         assert_equal({tuple(["SGML", "、"]): 4, tuple(["SGML", "実体"]): 4}, lc.search(["SGML"]))
         assert_equal({}, lc.search(["てる"]))
-        assert_equal({tuple(k.split('@')): v for k, v in lc._items.items()}, lc.search([]))
+        assert_equal(len(lc._items), len(lc.search([])))
+        assert_equal({}, lc.search(["す"]))

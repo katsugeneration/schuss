@@ -34,7 +34,12 @@ class LossyCountingNGram(object):
         '''
         query = "@".join(X)
         ret = {}
-        for key, value in filter(lambda x: x[0].startswith(query), self._items.items()):
+        if query == "":
+            dic = self._items.items()
+        else:
+            dic = filter(lambda x: (x[0].startswith(query+"@") or x[0] == query), self._items.items())
+
+        for key, value in dic:
             ret[tuple(key.split("@"))] = value
         return ret
 
