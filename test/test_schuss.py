@@ -39,8 +39,8 @@ class TestLossyCounting:
         with open('data/sp.txt', 'r', encoding='utf-8') as f:
             lc.fit(f)
 
-        schuss = Schuss(lc, tokenizer, smoother, None, correct_threshold=correct_threshold)
-        words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン。東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する")
+        schuss = Schuss(lc, tokenizer, smoother, None)
+        words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン。東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する", window_size=window_size, correct_threshold=correct_threshold)
         arr = ['、', 'トルクメニスタン', '。', '東', 'に']
         for i, s in enumerate(sliding_window(arr, window_size)):
             if smoother.smooth(lc, s) < correct_threshold:
@@ -48,7 +48,7 @@ class TestLossyCounting:
                 assert_true(counts[i + 6] < 0)
                 assert_true(counts[i + 7] < 0)
 
-        words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン、東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する")
+        words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン、東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する", window_size=window_size, correct_threshold=correct_threshold)
         arr = ['、', 'トルクメニスタン', '、', '東', 'に']
         for i, s in enumerate(sliding_window(arr, window_size)):
             if smoother.smooth(lc, s) < 0.01:
