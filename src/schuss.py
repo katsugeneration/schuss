@@ -26,6 +26,9 @@ class Schuss(object):
         detect sentence miss position.
         :parameters:
             correct_threshold: probability threshold for correct word order judgement.
+        :output:
+            words: target sentence's words(token)
+            costs: target words cost considered miss spell
         '''
         words = self.tokenizer.encode(sentence)
         costs = [0] * len(words)
