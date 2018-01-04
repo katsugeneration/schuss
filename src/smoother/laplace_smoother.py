@@ -12,8 +12,8 @@ class LaplaceSmoother(object):
         when C(w_1, w_2, ... w_n-1) is zero, P(w_n | w_1, w_2, ... w_n-2) is used.
         '''
         query = words[:-1]
-        dic = counter.search(query)
-        if len(dic) == 0:
+        befores = counter.search(query)
+        if len(befores) == 0:
             return self.smooth(counter, query)
 
         try:
@@ -22,4 +22,4 @@ class LaplaceSmoother(object):
         except:
             count = 0
         count += self.delta
-        return count / (dic["count"] + self.delta * dic["child_num"])
+        return count / (befores["count"] + self.delta * befores["child_num"])
