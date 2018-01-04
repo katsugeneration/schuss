@@ -1,6 +1,3 @@
-import collections
-from util.iterator import flatten
-
 
 class LaplaceSmoother(object):
     '''
@@ -21,9 +18,8 @@ class LaplaceSmoother(object):
 
         try:
             b = counter.search(words)
-            count = sum(flatten(b)) if isinstance(b, collections.Iterable) else b
+            count = b["count"]
         except:
             count = 0
         count += self.delta
-        l = list(flatten(dic))
-        return count / (sum(l) + self.delta * len(l))
+        return count / (dic["count"] + self.delta * dic["child_num"])

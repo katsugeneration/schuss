@@ -40,7 +40,6 @@ class Schuss(object):
         return words, costs
 
     def pickup(self, words, costs, num=10, distance=1, cost_threshold=-2, beta=0.5):
-        # TODO: speed up!!
         candidates = []
         for i, w in enumerate(words):
             if costs[i] > cost_threshold:
@@ -72,8 +71,6 @@ class Schuss(object):
 
             cs = map(_calc, items())
             cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num]
-            print(cs)
-
         return cs
 
     def _pickup_candidate_item(self, word, distance):

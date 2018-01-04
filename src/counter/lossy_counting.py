@@ -25,18 +25,6 @@ class LossyCountingNGram(object):
     def fit(self, X, y=None):
         self._count_ngram(X)
 
-        symbols = self._items
-        self._items = {}
-        for s, v in symbols.items():
-            words = s.split('@')
-            box = self._items
-            for w in words:
-                if w not in box:
-                    box[w] = {}
-                bbox = box
-                box = box[w]
-            bbox[w] = v
-
     def search(self, X):
         '''
         Search start query n-gram
@@ -47,7 +35,7 @@ class LossyCountingNGram(object):
         dic = self._items
         try:
             for x in X:
-                dic = dic[x]
+                dic = dic["children"][x]
         except:
             dic = {}
         return dic
@@ -61,6 +49,19 @@ class LossyCountingNGram(object):
                 continue
             line = line.strip().split()
             self._count_symbols(line)
+
+        symbols = self._items
+        self._items = {"children": {}}
+        for s, v in symbols.items():
+            words = s.split('@')
+            box = self._items
+            for w in words:
+                if w not in box["children"]:
+                    box["children"][w] = {"children": {}}
+                box = box["children"][w]
+            box["count"] = v
+            box["child_num"] = 1
+        self._add_count(self._items)
 
     def _count_symbols(self, arr):
         for s in sliding_window(arr, self.window_size):
@@ -79,3 +80,16 @@ class LossyCountingNGram(object):
     def _remove_items(self, items, threshold):
         ret = dict(filter(lambda x: x[1] >= threshold, items.items()))
         return ret
+
+    def _add_count(self, items):
+        if "count" in items:
+            return
+        elif "children" in items:
+            _sum = 0
+            _child_num = 0
+            for item in items["children"].values():
+                self._add_count(item)
+                _sum += item["count"]
+                _child_num += item["child_num"]
+            items["count"] = _sum
+            items["child_num"] = _child_num

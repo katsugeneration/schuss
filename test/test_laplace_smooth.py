@@ -2,7 +2,6 @@ from parameterized import parameterized
 from nose.tools import assert_equal, assert_true
 import os
 import sys
-from util.iterator import flatten
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 module_path = os.path.join(dir_path, "../src/smoother")
@@ -29,7 +28,8 @@ class TestSPTokenizer:
         with open('data/wakati.txt', 'r', encoding='utf-8') as f:
             lc.fit(f)
 
-        ret = list(flatten(lc.search(["として"])))
-        assert_equal((4 + delta) / (sum(ret) + len(ret) * delta), smoother.smooth(lc, ["として", "使用"]))
-        ret = list(flatten(lc._items))
-        assert_equal((delta) / (sum(ret) + len(ret) * delta), smoother.smooth(lc, ["と", "は"]))
+        ret = lc.search(["として"])
+        print(ret["children"])
+        assert_equal((4 + delta) / (ret["count"] + ret["child_num"] * delta), smoother.smooth(lc, ["として", "使用"]))
+        ret = lc._items
+        assert_equal((delta) / (ret["count"] + ret["child_num"] * delta), smoother.smooth(lc, ["と", "は"]))
