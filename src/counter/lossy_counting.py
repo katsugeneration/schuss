@@ -32,13 +32,13 @@ class LossyCountingNGram(object):
         :parameters:
             X: query array-like object
         '''
-        dic = self._items
+        ret = self._items
         try:
             for x in X:
-                dic = dic["children"][x]
+                ret = ret["children"][x]
         except:
-            dic = {}
-        return dic
+            ret = {}
+        return ret
 
     def _count_ngram(self, X):
         self._symbol_num = 0
