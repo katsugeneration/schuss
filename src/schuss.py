@@ -44,7 +44,10 @@ class Schuss(object):
 
     def pickup(self, words, costs, num=10, distance=1, cost_threshold=-2, beta=0.5):
         '''
-        Pickup cnadidate sentences for miss spel fix
+        Pickup cnadidate sentences for miss spell fix by likelihood.
+        P(C|W)(likelihood) = P(W|C)P(C)
+        P(W|C) is probability of misstake. it is considered to distance between C and W
+        P(C) is probability of C in language. it is approximate to P(C_i|C_i-1, C_i-2)
 
         :parameters:
             words: target sentence's words(token)
@@ -52,7 +55,7 @@ class Schuss(object):
             num: output numbers
             distance: max distance between taraget word and fixed candidate word
             cost_threshold: target word's min cost for comparing candidate words
-            beta: distance cost. P(w_i|c_i) = beta ** (distance + a)
+            beta: distance cost. P(w_i|c_i) = beta ** (distance + 1)
 
         :output:
             candidate sentences array. a candidate is tuple of candidate sentence and likelihood
