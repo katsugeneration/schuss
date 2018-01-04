@@ -20,9 +20,7 @@ class LaplaceSmoother(object):
             return self.smooth(counter, query)
 
         try:
-            b = counter._items
-            for w in words:
-                b = b[w]
+            b = counter.search(words)
             count = sum(flatten(b)) if isinstance(b, collections.Iterable) else b
         except:
             count = 0
