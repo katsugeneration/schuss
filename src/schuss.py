@@ -40,6 +40,20 @@ class Schuss(object):
         return words, costs
 
     def pickup(self, words, costs, num=10, distance=1, cost_threshold=-2, beta=0.5):
+        '''
+        Pickup cnadidate sentences for miss spel fix
+
+        :parameters:
+            words: target sentence's words(token)
+            costs: target words cost considered miss spell
+            num: output numbers
+            distance: max distance between taraget word and fixed candidate word
+            cost_threshold: target word's min cost for comparing candidate words
+            beta: distance cost. P(w_i|c_i) = beta ** (distance + a)
+
+        :output:
+            candidate sentences array. a candidate is tuple of candidate sentence and likelihood
+        '''
         candidates = []
         for i, w in enumerate(words):
             if costs[i] > cost_threshold:
