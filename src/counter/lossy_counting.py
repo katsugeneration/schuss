@@ -49,19 +49,7 @@ class LossyCountingNGram(object):
                 continue
             line = line.strip().split()
             self._count_symbols(line)
-
-        symbols = self._items
-        self._items = {"children": {}}
-        for s, v in symbols.items():
-            words = s.split('@')
-            box = self._items
-            for w in words:
-                if w not in box["children"]:
-                    box["children"][w] = {"children": {}}
-                box = box["children"][w]
-            box["count"] = v
-            box["child_num"] = 1
-        self._add_count(self._items)
+        self._create_indexes()
 
     def _count_symbols(self, arr):
         for s in sliding_window(arr, self.window_size):
@@ -80,6 +68,20 @@ class LossyCountingNGram(object):
     def _remove_items(self, items, threshold):
         ret = dict(filter(lambda x: x[1] >= threshold, items.items()))
         return ret
+
+    def _create_indexes(self):
+        symbols = self._items
+        self._items = {"children": {}}
+        for s, v in symbols.items():
+            words = s.split('@')
+            box = self._items
+            for w in words:
+                if w not in box["children"]:
+                    box["children"][w] = {"children": {}}
+                box = box["children"][w]
+            box["count"] = v
+            box["child_num"] = 1
+        self._add_count(self._items)
 
     def _add_count(self, items):
         if "count" in items:
