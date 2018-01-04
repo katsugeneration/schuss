@@ -1,3 +1,6 @@
+import collections
+from util.iterator import flatten
+
 
 class LaplaceSmoother(object):
     '''
@@ -12,10 +15,17 @@ class LaplaceSmoother(object):
         when C(w_1, w_2, ... w_n-1) is zero, P(w_n | w_1, w_2, ... w_n-2) is used.
         '''
         query = words[:-1]
-        ret = counter.search(query)
-        if len(ret) == 0:
+        dic = counter.search(query)
+        if len(dic) == 0:
             return self.smooth(counter, query)
 
-        count = ret[tuple(words)] if tuple(words) in ret else 0
+        try:
+            b = counter._items
+            for w in words:
+                b = b[w]
+            count = sum(flatten(b)) if isinstance(b, collections.Iterable) else b
+        except:
+            count = 0
         count += self.delta
-        return count / (sum(ret.values()) + self.delta * len(ret))
+        l = list(flatten(dic))
+        return count / (sum(l) + self.delta * len(l))

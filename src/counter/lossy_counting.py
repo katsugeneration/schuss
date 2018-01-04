@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from util.sliding import sliding_window
+from util.iterator import sliding_window
 
 
 class LossyCountingNGram(object):
@@ -25,6 +25,18 @@ class LossyCountingNGram(object):
     def fit(self, X, y=None):
         self._count_ngram(X)
 
+        symbols = self._items
+        self._items = {}
+        for s, v in symbols.items():
+            words = s.split('@')
+            box = self._items
+            for w in words:
+                if w not in box:
+                    box[w] = {}
+                bbox = box
+                box = box[w]
+            bbox[w] = v
+
     def search(self, X):
         '''
         Search start query n-gram
@@ -32,16 +44,13 @@ class LossyCountingNGram(object):
         :parameters:
             X: query array-like object
         '''
-        query = "@".join(X)
-        ret = {}
-        if query == "":
-            dic = self._items.items()
-        else:
-            dic = filter(lambda x: (x[0].startswith(query+"@") or x[0] == query), self._items.items())
-
-        for key, value in dic:
-            ret[tuple(key.split("@"))] = value
-        return ret
+        dic = self._items
+        try:
+            for x in X:
+                dic = dic[x]
+        except:
+            dic = {}
+        return dic
 
     def _count_ngram(self, X):
         self._symbol_num = 0
@@ -68,7 +77,5 @@ class LossyCountingNGram(object):
                 self._items = self._remove_items(self._items, self._buckets_num)
 
     def _remove_items(self, items, threshold):
-        ret = {}
-        for key, value in filter(lambda x: x[1] >= threshold, items.items()):
-            ret[key] = value
+        ret = dict(filter(lambda x: x[1] >= threshold, items.items()))
         return ret

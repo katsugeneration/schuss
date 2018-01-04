@@ -10,7 +10,7 @@ if module_path not in sys.path:
 
 os.chdir(dir_path)
 
-from util.sliding import sliding_window
+from util.iterator import sliding_window
 
 class TestLossyCounting:
     def test_init(self):
@@ -41,6 +41,7 @@ class TestLossyCounting:
 
         schuss = Schuss(lc, tokenizer, smoother, None)
         words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン。東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する", correct_threshold=correct_threshold)
+        print(words, counts)
         arr = ['、', 'トルクメニスタン', '。', '東', 'に']
         for i, s in enumerate(sliding_window(arr, window_size)):
             if smoother.smooth(lc, s) < correct_threshold:
@@ -49,6 +50,7 @@ class TestLossyCounting:
                 assert_true(counts[i + 7] < 0)
 
         words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン、東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する", correct_threshold=correct_threshold)
+        print(words, counts)
         arr = ['、', 'トルクメニスタン', '、', '東', 'に']
         for i, s in enumerate(sliding_window(arr, window_size)):
             if smoother.smooth(lc, s) < 0.01:

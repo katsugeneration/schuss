@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from gevent.pool import Pool
-from util.sliding import sliding_window
+from util.iterator import sliding_window
 
 
 class Schuss(object):
@@ -50,10 +49,7 @@ class Schuss(object):
                 c = self._pickup_candidate_item(w, distance)
                 if (w, 0) not in c:
                     c += [(w, 0)]
-                print(len(c))
                 candidates.append(c)
-
-        pool = Pool(10)
 
         cs = [("", 0.0)]
 
@@ -73,8 +69,8 @@ class Schuss(object):
                 for c in candidate:
                     for s in before_cs:
                         yield (c, s)
-            
-            cs = pool.map(_calc, items())
+
+            cs = map(_calc, items())
             cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num]
             print(cs)
 

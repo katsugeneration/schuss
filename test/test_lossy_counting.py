@@ -2,6 +2,7 @@ from parameterized import parameterized
 from nose.tools import assert_equal, assert_true
 import os
 import sys
+from util.iterator import flatten
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 module_path = os.path.join(dir_path, "../src/counter")
@@ -58,9 +59,9 @@ class TestLossyCounting:
                     continue
                 symbol_num += sum([1 for _ in line.strip().split()]) - window_size + 1
 
-        assert_true(all([v >= lc._buckets_num for v in lc._items.values()]))
-        assert_true(lc._items["で@は"] < 5 + int(symbol_num * epsilon))
-        assert_true(lc._items["は@、"] < 5 + int(symbol_num * epsilon))
+        assert_true(all([v >= lc._buckets_num for v in flatten(lc._items)]))
+        assert_true(lc._items["で"]["は"] < 5 + int(symbol_num * epsilon))
+        assert_true(lc._items["は"]["、"] < 5 + int(symbol_num * epsilon))
 
     def test_search(self):
         from lossy_counting import LossyCountingNGram
@@ -68,9 +69,9 @@ class TestLossyCounting:
         with open('data/wakati.txt', 'r', encoding='utf-8') as f:
             lc.fit(f)
 
-        assert_equal({tuple(["する", "こと"]): 4}, lc.search(["する", "こと"]))
-        assert_equal({tuple(["する", "こと"]): 4}, lc.search(["する"]))
-        assert_equal({tuple(["SGML", "、"]): 4, tuple(["SGML", "実体"]): 4}, lc.search(["SGML"]))
+        assert_equal(4, lc.search(["する", "こと"]))
+        assert_equal({"こと": 4}, lc.search(["する"]))
+        assert_equal({'実体': 4, '、': 4}, lc.search(["SGML"]))
         assert_equal({}, lc.search(["てる"]))
         assert_equal(len(lc._items), len(lc.search([])))
         assert_equal({}, lc.search(["す"]))
