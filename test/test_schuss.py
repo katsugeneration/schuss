@@ -95,7 +95,9 @@ class TestLossyCounting:
             lc.fit(f)
 
         schuss = Schuss(lc, tokenizer, smoother, l)
-        # words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン。東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する", correct_threshold=correct_threshold)
+        words, counts = schuss.detect("北にアゼルバイジャン、アルメニア、トルクメニスタン。東にパキスタン、アフガニスタン、西にトルコ、イラクと境を接する", correct_threshold=correct_threshold)
+        ret = schuss.pickup(words, counts)
+        print(ret)
         words, counts = schuss.detect("今日は晴れますか？", correct_threshold=correct_threshold)
         ret = schuss.pickup(words, counts)
         print(ret)

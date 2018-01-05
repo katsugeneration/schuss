@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import math
 from util.iterator import sliding_window
 
 
@@ -55,7 +56,7 @@ class Schuss(object):
             num: output numbers
             distance: max distance between taraget word and fixed candidate word
             cost_threshold: target word's min cost for comparing candidate words
-            beta: distance cost. P(w_i|c_i) = beta ** (distance + 1)
+            beta: distance cost. P(w_i|c_i) = beta ** distance
 
         :output:
             candidate sentences array. a candidate is tuple of candidate sentence and likelihood
@@ -70,14 +71,14 @@ class Schuss(object):
                     c += [(w, 0)]
                 candidates.append(c)
 
-        cs = [("", 0.0)]
+        cs = [([""], 0.0)]
 
         def _calc(args):
             c, s = args
-            sentence = s[0] + c[0]
+            sentence = (s[0] + [c[0]])
             rate = s[1] \
-                + (beta ** (c[1] + 1)) \
-                + self.smoother.smooth(self.counter, sentence[-self.window_size:])
+                + c[1] * math.log(beta) \
+                + math.log(self.smoother.smooth(self.counter, sentence[-self.window_size:]))
             return (sentence, rate)
 
         for candidate in candidates:
@@ -91,6 +92,7 @@ class Schuss(object):
 
             cs = map(_calc, items())
             cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num]
+        cs = list(map(lambda x: ("".join(x[0]), x[1]), cs))
         return cs
 
     def _pickup_candidate_item(self, word, distance):
