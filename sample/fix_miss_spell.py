@@ -26,7 +26,7 @@ def main():
         help='laplace smoothing algorithme delta parameter')
     parser.add_argument(
         '--output_num', default=10, type=int,
-        help='best n candidate output')
+        help='best n candidate output per word')
     parser.add_argument(
         '--distance', default=1, type=int,
         help='fixed candidate word distance')
