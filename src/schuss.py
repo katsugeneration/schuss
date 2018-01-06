@@ -41,7 +41,7 @@ class Schuss(object):
 
         return words, costs
 
-    def pickup(self, words, costs, num=10, distance=1, cost_threshold=-2, beta=0.5):
+    def pickup(self, words, costs, num=10, distance=1, cost_threshold=-2, beta=0.1):
         '''
         Pickup cnadidate sentences for miss spell fix by likelihood.
         P(C|W)(likelihood) = P(W|C)P(C)

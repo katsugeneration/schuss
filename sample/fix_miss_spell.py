@@ -37,7 +37,7 @@ def main():
         '--cost_threshold', default=-2, type=int,
         help='judgement fixed word cost')
     parser.add_argument(
-        '--beta', default=0.5, type=float,
+        '--beta', default=0.1, type=float,
         help='word distance penalty parameter')
     args = parser.parse_args()
 
@@ -56,9 +56,12 @@ def main():
 
     while True:
         sentence = input("input: ")
+        import time
+        start = time.time()
         words, counts = schuss.detect(sentence, correct_threshold=args.correct_threshold)
         ret = schuss.pickup(words, counts, num=args.output_num, distance=args.distance, cost_threshold=args.cost_threshold, beta=args.beta)
         print(ret)
+        print(time.time() - start)
 
 
 if __name__ == '__main__':
