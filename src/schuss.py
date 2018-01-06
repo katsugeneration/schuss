@@ -7,20 +7,18 @@ class Schuss(object):
     '''
     Spell checker main module.
     '''
-    def __init__(self, counter, tokenizer, smoother, distance, window_size=3):
+    def __init__(self, counter, tokenizer, smoother, distance):
         '''
         :parameters:
             counter: n-gram counter object. Expect counted.
             tokenizer: tokenizer object. SentecePiece or mecab ot etc...
             smoother: probability smoothing object.
             distance: words distance  mesurement object.
-            window_size: considering window size before word.
         '''
         self.counter = counter
         self.tokenizer = tokenizer
         self.smoother = smoother
         self.distance = distance
-        self.window_size = window_size
 
     def detect(self, sentence, correct_threshold=0.05):
         '''
@@ -34,11 +32,11 @@ class Schuss(object):
         words = self.tokenizer.encode(sentence)
         costs = [0] * len(words)
 
-        for i, s in enumerate(sliding_window(words, self.window_size)):
+        for i, s in enumerate(sliding_window(words, self.counter.window_size)):
             p = self.smoother.smooth(self.counter, s)
             if p >= correct_threshold:
                 continue
-            for j in range(i, i + self.window_size):
+            for j in range(i, i + self.counter.window_size):
                 costs[j] += -1
 
         return words, costs
@@ -78,7 +76,7 @@ class Schuss(object):
             sentence = (s[0] + [c[0]])
             rate = s[1] \
                 + c[1] * math.log(beta) \
-                + math.log(self.smoother.smooth(self.counter, sentence[-self.window_size:]))
+                + math.log(self.smoother.smooth(self.counter, sentence[-self.counter.window_size:]))
             return (sentence, rate)
 
         for candidate in candidates:
