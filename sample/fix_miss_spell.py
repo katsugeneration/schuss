@@ -10,8 +10,6 @@ if module_path not in sys.path:
 
 
 def main():
-    from counter.lossy_counting import LossyCountingNGram
-
     parser = argparse.ArgumentParser(
         description='create n-gram count object')
     parser.add_argument(
