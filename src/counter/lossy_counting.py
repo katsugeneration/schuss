@@ -10,7 +10,7 @@ class LossyCountingNGram(object):
         _symbol_num: symbol count in training corpus.
         _items: item dictionary. key is symbol which join \'@\' n-gram. value is symbol count.
     '''
-    def __init__(self, window_size=3, epsilon=1e-5):
+    def __init__(self, window_size=2, epsilon=1e-5):
         '''
         :parameters:
             window_size: n in n-gram.

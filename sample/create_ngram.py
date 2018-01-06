@@ -18,7 +18,7 @@ def main():
         'input', type=str,
         help='input tokenized sentence text encoding utf-8')
     parser.add_argument(
-        '--window_size', default=3, type=int,
+        '--window_size', default=2, type=int,
         help='n-gram window size')
     parser.add_argument(
         '--epsilon', default=1e-7, type=float,
