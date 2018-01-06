@@ -57,7 +57,7 @@ def main():
     while True:
         sentence = input("input: ")
         words, counts = schuss.detect(sentence, correct_threshold=args.correct_threshold)
-        ret = schuss.pickup(words, counts, num=args.output_num, distance=args.distance, cost_threshold=args.cost_threshold, beta=0.5)
+        ret = schuss.pickup(words, counts, num=args.output_num, distance=args.distance, cost_threshold=args.cost_threshold, beta=args.beta)
         print(ret)
 
 
