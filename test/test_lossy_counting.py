@@ -40,6 +40,7 @@ class TestLossyCounting:
 
         assert_equal(symbol_num, lc._symbol_num)
         assert_true(int(symbol_num * epsilon) - 1 <= lc._buckets_num <= int(symbol_num * epsilon))
+        assert_true(all([w in lc.vocab for w in lc._items["children"]]))
 
     @parameterized([
         (2, 1e-1),

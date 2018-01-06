@@ -21,6 +21,7 @@ class LossyCountingNGram(object):
         self.epsilon = epsilon
         self.window_size = window_size
         self._items = {}
+        self.vocab = []
 
     def fit(self, X, y=None):
         self._count_ngram(X)
@@ -76,6 +77,8 @@ class LossyCountingNGram(object):
             words = s.split('@')
             box = self._items
             for w in words:
+                if w not in self.vocab:
+                    self.vocab.append(w)
                 if w not in box["children"]:
                     box["children"][w] = {"children": {}}
                 box = box["children"][w]

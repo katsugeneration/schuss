@@ -96,7 +96,7 @@ class Schuss(object):
     def _pickup_candidate_item(self, word, distance):
         return list(map(lambda w: (w, self.distance.measure(word, w)),
                     filter(lambda w: self.distance.measure(word, w) <= distance,
-                    self.tokenizer.vocab)))
+                    (set(self.tokenizer.vocab) | set(self.counter.vocab)))))
 
     def fix(self, sentence):
         pass
