@@ -20,6 +20,8 @@ class Schuss(object):
         self.smoother = smoother
         self.distance = distance
 
+        self.tokenizer.vocab = list(set(self.tokenizer.vocab) | set(self.counter.vocab))
+
     def detect(self, sentence, correct_threshold=0.05):
         '''
         detect sentence miss position.
@@ -96,7 +98,7 @@ class Schuss(object):
     def _pickup_candidate_item(self, word, distance):
         return list(map(lambda w: (w, self.distance.measure(word, w)),
                     filter(lambda w: self.distance.measure(word, w) <= distance,
-                    self.counter.vocab)))
+                    self.tokenizer.vocab)))
 
     def fix(self, sentence):
         pass
