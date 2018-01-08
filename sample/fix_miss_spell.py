@@ -42,13 +42,15 @@ def main():
     args = parser.parse_args()
 
     from tokenizer.sp_tokenizer import SentencePieceTokenizer
+    from tokenizer.mecab_tokenizer import MecabTokenizer
     from smoother.laplace_smoother import LaplaceSmoother
     from distance.levenshtein import Levenshtein
     from schuss import Schuss
 
     with open(args.counter, 'rb') as f:
         lc = pickle.load(f)
-    tokenizer = SentencePieceTokenizer(args.model, args.vocab)
+    # tokenizer = SentencePieceTokenizer(args.model, args.vocab)
+    tokenizer = MecabTokenizer()
     smoother = LaplaceSmoother(delta=args.delta)
     l = Levenshtein()
 
