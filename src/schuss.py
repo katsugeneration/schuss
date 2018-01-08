@@ -34,6 +34,10 @@ class Schuss(object):
         words = self.tokenizer.encode(sentence)
         costs = [0] * len(words)
 
+        for i, w in enumerate(words):
+            if w not in self.tokenizer.vocab:
+                costs[i] += -1
+
         for i, s in enumerate(sliding_window(words, self.counter.window_size)):
             p = self.smoother.smooth(self.counter, s)
             if p >= correct_threshold:
