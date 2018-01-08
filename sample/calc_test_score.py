@@ -59,6 +59,7 @@ def main():
 
     f = open(args.input, "r", encoding="utf-8")
     count = {True: {True: 0, False: 0}, False: {True: 0, False: 0}}
+    cc = 0
     results = []
     for line in f:
         if line.startswith('data'):
@@ -67,9 +68,11 @@ def main():
         words, counts = schuss.detect(sentence, correct_threshold=args.correct_threshold)
         ret = schuss.pickup(words, counts, num=args.output_num, distance=args.distance, cost_threshold=args.cost_threshold, beta=args.beta)
         count[flag == "1"][sentence == ret[0][0]] += 1
+        cc += (correct == ret[0][0])
         results.append((sentence, ret[0][0]))
 
     print(count)
+    print(cc)
     print(results)
 
 
