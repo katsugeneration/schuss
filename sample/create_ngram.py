@@ -29,7 +29,7 @@ def main():
     args = parser.parse_args()
 
     lc = LossyCountingNGram(window_size=args.window_size, epsilon=args.epsilon)
-    with open(args.input, 'r', encoding='utf-8') as f:
+    with open(args.input, 'r', encoding='utf-8', errors='ignore') as f:
         lc.fit(f)
 
     with open(args.output, 'wb') as f:
