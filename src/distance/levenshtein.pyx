@@ -1,3 +1,4 @@
+import numpy as np
 
 
 class Levenshtein(object):
@@ -5,17 +6,19 @@ class Levenshtein(object):
     Levenshtein distance measurement module
     '''
     def measure(self, word1, word2):
-        distances = []
+        cdef int l_w1 = len(word1)
+        cdef int l_w2 = len(word2)
+        cdef int i, j
+        cdef int[:, :] distances = np.zeros((l_w1, l_w2), dtype=int)
 
-        for i in range(len(word1) + 1):
-            distances.append([0] * (len(word2) + 1))
+        for i in range(l_w1 + 1):
             distances[i][0] = i
 
-        for j in range(len(word2) + 1):
+        for j in range(l_w2 + 1):
             distances[0][j] = j
 
-        for i in range(1, len(word1) + 1):
-            for j in range(1, len(word2) + 1):
+        for i in range(1, l_w1 + 1):
+            for j in range(1, l_w2 + 1):
                 if word1[i - 1] == word2[j - 1]:
                     x = 0
                 else:
@@ -25,4 +28,4 @@ class Levenshtein(object):
                     distances[i - 1][j] + 1,
                     distances[i][j - 1] + 1,
                     distances[i - 1][j - 1] + x)
-        return distances[-1][-1]
+        return distances[l_w1][l_w2]
