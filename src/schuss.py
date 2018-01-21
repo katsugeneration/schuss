@@ -78,21 +78,23 @@ class Schuss(object):
         cs = [([""], 0.0)]
 
         def _calc(args):
-            c, s = args
+            c, s, next = args
             sentence = (s[0] + [c[0]])
             rate = s[1] \
                 + c[1] * math.log(beta) \
-                + math.log(self.smoother.smooth(self.counter, sentence[-self.counter.window_size:]))
+                + math.log(self.smoother.smooth(self.counter, sentence[-self.counter.window_size:-1])) \
+                + math.log(self.smoother.smooth(self.counter, sentence[-self.counter.window_size+1:] + [next]))
             return (sentence, rate)
 
-        for candidate in candidates:
+        for i, candidate in enumerate(candidates):
             before_cs = cs
             cs = []
+            next = words[i+1] if i+1 < len(words) else ""
 
             def items():
                 for c in candidate:
                     for s in before_cs:
-                        yield (c, s)
+                        yield (c, s, next)
 
             cs = map(_calc, items())
             cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num]
@@ -101,7 +103,7 @@ class Schuss(object):
 
     def _pickup_candidate_item(self, word, distance):
         return list(map(lambda w: (w, self.distance.measure(word, w)),
-                    filter(lambda w: self.distance.measure(word, w) <= distance,
+                    filter(lambda w: abs(len(word) - len(w)) <= distance and self.distance.measure(word, w) <= distance,
                     self.tokenizer.vocab)))
 
     def fix(self, sentence):
