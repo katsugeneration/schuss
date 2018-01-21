@@ -5,19 +5,11 @@ class Levenshtein(object):
     '''
     Levenshtein distance measurement module
     '''
-    def get_char_type(self, c):
-        if (ord(c) >= ord("\u3041") and ord(c) <= ord("\u3096")) or (ord(c) >= ord("\u30A1") and ord(c) <= ord("\u30F6")):
-            return "kana"
-        elif (ord(c) >= ord("\u4E00") and ord(c) <= ord("\u9FA0")):
-            return "kanji"
-        else:
-            return "others"
-
     def measure(self, word1, word2):
         cdef int l_w1 = len(word1)
         cdef int l_w2 = len(word2)
         cdef int i, j
-        cdef int[:, :] distances = np.zeros((l_w1 + 1, l_w2 + 1), dtype=np.int32)
+        cdef int[:, :] distances = np.zeros((l_w1, l_w2), dtype=int)
 
         for i in range(l_w1 + 1):
             distances[i][0] = i
@@ -30,10 +22,7 @@ class Levenshtein(object):
                 if word1[i - 1] == word2[j - 1]:
                     x = 0
                 else:
-                    if self.get_char_type(word1[i - 1]) != self.get_char_type(word2[j - 1]):
-                        x = 2
-                    else:
-                        x = 1
+                    x = 1
 
                 distances[i][j] = min(
                     distances[i - 1][j] + 1,
