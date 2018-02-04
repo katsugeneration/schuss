@@ -31,7 +31,7 @@ def main():
         '--distance', default=1, type=int,
         help='fixed candidate word distance')
     parser.add_argument(
-        '--correct_threshold', default=0.01, type=float,
+        '--correct_threshold', default=0.001, type=float,
         help='judgement correct word probability')
     parser.add_argument(
         '--cost_threshold', default=-2, type=int,
@@ -49,8 +49,7 @@ def main():
 
     with open(args.counter, 'rb') as f:
         lc = pickle.load(f)
-    # tokenizer = SentencePieceTokenizer(args.model, args.vocab)
-    tokenizer = MecabTokenizer()
+    tokenizer = SentencePieceTokenizer(args.model, args.vocab)
     smoother = LaplaceSmoother(delta=args.delta)
     l = Levenshtein()
 
@@ -62,6 +61,8 @@ def main():
         start = time.time()
         words, counts = schuss.detect(sentence, correct_threshold=args.correct_threshold)
         ret = schuss.pickup(words, counts, num=args.output_num, distance=args.distance, cost_threshold=args.cost_threshold, beta=args.beta)
+        print(words)
+        print(counts)
         print(ret)
         print(time.time() - start)
 

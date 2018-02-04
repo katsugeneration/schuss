@@ -22,7 +22,7 @@ class Schuss(object):
 
         self.tokenizer.vocab = list(set(self.tokenizer.vocab) | set(self.counter.vocab))
 
-    def detect(self, sentence, correct_threshold=0.05):
+    def detect(self, sentence, correct_threshold=0.001):
         '''
         detect sentence miss position.
         :parameters:
@@ -82,7 +82,7 @@ class Schuss(object):
             sentence = (s[0] + [c[0]])
             rate = s[1] \
                 + c[1] * math.log(beta) \
-                + math.log(self.smoother.smooth(self.counter, sentence[-self.counter.window_size:-1])) \
+                + math.log(self.smoother.smooth(self.counter, sentence[-self.counter.window_size:])) \
                 + math.log(self.smoother.smooth(self.counter, sentence[-self.counter.window_size+1:] + [next]))
             return (sentence, rate)
 

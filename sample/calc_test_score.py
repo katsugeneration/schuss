@@ -34,7 +34,7 @@ def main():
         '--distance', default=1, type=int,
         help='fixed candidate word distance')
     parser.add_argument(
-        '--correct_threshold', default=0.01, type=float,
+        '--correct_threshold', default=0.001, type=float,
         help='judgement correct word probability')
     parser.add_argument(
         '--cost_threshold', default=-2, type=int,
@@ -66,14 +66,18 @@ def main():
             continue
         sentence, correct, flag = line.strip().split("\t")
         words, counts = schuss.detect(sentence, correct_threshold=args.correct_threshold)
+        print(words)
+        print(counts)
         ret = schuss.pickup(words, counts, num=args.output_num, distance=args.distance, cost_threshold=args.cost_threshold, beta=args.beta)
         count[flag == "1"][sentence == ret[0][0]] += 1
         cc += (correct == ret[0][0])
         results.append((sentence, ret[0][0]))
+        print(count)
+        print(sentence)
+        print(ret[0][0])
 
     print(count)
     print(cc)
-    print(results)
 
 
 if __name__ == '__main__':

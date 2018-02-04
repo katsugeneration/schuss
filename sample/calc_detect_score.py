@@ -28,7 +28,7 @@ def main():
         '--delta', default=1, type=int,
         help='laplace smoothing algorithme delta parameter')
     parser.add_argument(
-        '--correct_threshold', default=0.01, type=float,
+        '--correct_threshold', default=0.001, type=float,
         help='judgement correct word probability')
     parser.add_argument(
         '--cost_threshold', default=-2, type=int,
