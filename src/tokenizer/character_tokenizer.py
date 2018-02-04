@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-import subprocess
-
-
 class CharacterTokenizer(object):
     '''
-    Japanese Yomi Tokenizer
+    Character Tokenizer
     '''
     def __init__(self):
         self.vocab = []
