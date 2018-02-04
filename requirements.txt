@@ -1,1 +1,2 @@
 sentencepiece==0.0.3
+Cython==0.27.3
