@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
+import subprocess
 from util.iterator import sliding_window
 
 
@@ -20,7 +21,9 @@ class Schuss(object):
         self.smoother = smoother
         self.distance = distance
 
-        self.tokenizer.vocab = list(set(self.tokenizer.vocab) | set(self.counter.vocab))
+        self.tokenizer.vocab = list(set(self.tokenizer.vocab) | set(self.counter.vocab)
+                                    | set([chr(c) for c in range(ord("\u3041"), ord("\u3096"))])
+                                    | set([chr(c) for c in range(ord("\u30A1"), ord("\u30F6"))]))
 
     def detect(self, sentence, correct_threshold=0.001):
         '''
@@ -97,7 +100,9 @@ class Schuss(object):
                         yield (c, s, next)
 
             cs = map(_calc, items())
-            cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num]
+            cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num * 10]
+            if len(cs) > num:
+                cs = self._select_candidate(cs, words[i+1:], num)
         cs = list(map(lambda x: ("".join(x[0]), x[1]), cs))
         return cs
 
@@ -105,6 +110,16 @@ class Schuss(object):
         return list(map(lambda w: (w, self.distance.measure(word, w)),
                     filter(lambda w: abs(len(word) - len(w)) <= distance and self.distance.measure(word, w) <= distance,
                     self.tokenizer.vocab)))
+
+    def _select_candidate(self, sentences, words, num):
+        def get_value(sentence):
+            s = "".join(sentence[0] + words).replace("\'", "\"")
+            f = subprocess.check_output("echo \'" + s + "\' | mecab -F\"%pc \" -E\"EOS\"", shell=True).decode("utf-8", "ignore")
+            return (sentence[0], sentence[1], int(f.split()[-2]))
+
+        sentences = map(get_value, sentences)
+        sentences = list(map(lambda x: (x[0], x[1]), sorted(sentences, key=lambda r: r[2])[:num]))
+        return sentences
 
     def fix(self, sentence):
         pass
