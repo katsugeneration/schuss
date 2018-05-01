@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-EMB_SIZE = 100
+EMB_SIZE = 10
 
 
 def gen_conv(batch_input, out_channels, kernel_size, a):
