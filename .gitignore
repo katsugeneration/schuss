@@ -106,3 +106,9 @@ ENV/
 *.model
 *.vocab
 *.txt
+*.index
+events.out.*
+checkpoint
+options.json
+*.meta
+*.data-*
