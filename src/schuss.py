@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
 import subprocess
+import numpy as np
 from util.iterator import sliding_window
 
 
@@ -25,6 +26,9 @@ class Schuss(object):
                                     | set([chr(c) for c in range(ord("\u3041"), ord("\u3096"))])
                                     | set([chr(c) for c in range(ord("\u30A1"), ord("\u30F6"))]))
 
+        # test
+        from predictor.predictor import Predictor
+        self.predictor = Predictor("test_learn")
         import MeCab
         self.m = MeCab.Tagger("-F\"%pc -E\"EOS")
 
@@ -118,10 +122,13 @@ class Schuss(object):
         def get_value(sentence):
             s = "".join(sentence[0] + words).replace("\'", "\"")
             f = self.m.parse(s)
-            return (sentence[0], sentence[1], int(f.split("\"")[-2]))
+            ids = self.tokenizer.encode_ids(s)
+            ids = np.array(ids).reshape((1, 50))
+            rate = self.predictor.predict(ids)
+            return (sentence[0], sentence[1], int(f.split("\"")[-2]), rate[0][0])
 
-        sentences = map(get_value, sentences)
-        sentences = list(map(lambda x: (x[0], x[1]), sorted(sentences, key=lambda r: (r[2] * 0.01 + r[1]))[:num]))
+        sentences = list(map(get_value, sentences))
+        sentences = list(map(lambda x: (x[0], x[1]), sorted(sentences, key=lambda r: (-r[3] * 100 + r[2] * 0.005 - r[1]))[:num]))
         return sentences
 
     def fix(self, sentence):

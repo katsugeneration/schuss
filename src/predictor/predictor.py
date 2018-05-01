@@ -1,7 +1,7 @@
 import os
-import cnnsc
 import json
 import tensorflow as tf
+from predictor import cnnsc
 
 
 class Args:

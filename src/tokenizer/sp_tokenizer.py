@@ -28,3 +28,13 @@ class SentencePieceTokenizer(object):
         tokenize sentence using SentencePiece
         '''
         return self.sp.EncodeAsPieces(sentence)
+
+    def encode_ids(self, sentence):
+        '''
+        tokenize sentence using SentencePiece to ids
+        '''
+        words = self.sp.EncodeAsIds(sentence)
+        words = words[:50]
+        if len(words) < 50:
+            words += [8000] * (50 - len(words))
+        return words
