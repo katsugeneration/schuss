@@ -61,10 +61,12 @@ def main():
         start = time.time()
         words, counts = schuss.detect(sentence, correct_threshold=args.correct_threshold)
         ret = schuss.pickup(words, counts, num=args.output_num, distance=args.distance, cost_threshold=args.cost_threshold, beta=args.beta)
-        print(words)
-        print(counts)
-        print(ret)
-        print(time.time() - start)
+        print("words:", words)
+        print("costs:", counts)
+        print("results:")
+        for r in ret:
+            print(r)
+        print("time:", time.time() - start)
 
 
 if __name__ == '__main__':
