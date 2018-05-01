@@ -25,6 +25,9 @@ class Schuss(object):
                                     | set([chr(c) for c in range(ord("\u3041"), ord("\u3096"))])
                                     | set([chr(c) for c in range(ord("\u30A1"), ord("\u30F6"))]))
 
+        import MeCab
+        self.m = MeCab.Tagger("-F\"%pc -E\"EOS")
+
     def detect(self, sentence, correct_threshold=0.001):
         '''
         detect sentence miss position.
@@ -100,7 +103,7 @@ class Schuss(object):
                         yield (c, s, next)
 
             cs = map(_calc, items())
-            cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num * 10]
+            cs = sorted(cs, key=lambda r: r[1], reverse=True)[:num * 100]
             if len(cs) > num:
                 cs = self._select_candidate(cs, words[i+1:], num)
         cs = list(map(lambda x: ("".join(x[0]), x[1]), cs))
@@ -114,11 +117,11 @@ class Schuss(object):
     def _select_candidate(self, sentences, words, num):
         def get_value(sentence):
             s = "".join(sentence[0] + words).replace("\'", "\"")
-            f = subprocess.check_output("echo \'" + s + "\' | mecab -F\"%pc \" -E\"EOS\"", shell=True).decode("utf-8", "ignore")
-            return (sentence[0], sentence[1], int(f.split()[-2]))
+            f = self.m.parse(s)
+            return (sentence[0], sentence[1], int(f.split("\"")[-2]))
 
         sentences = map(get_value, sentences)
-        sentences = list(map(lambda x: (x[0], x[1]), sorted(sentences, key=lambda r: r[2])[:num]))
+        sentences = list(map(lambda x: (x[0], x[1]), sorted(sentences, key=lambda r: (r[2] * 0.01 + r[1]))[:num]))
         return sentences
 
     def fix(self, sentence):
