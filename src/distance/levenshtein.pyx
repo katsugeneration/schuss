@@ -6,7 +6,10 @@ class Levenshtein(object):
     Levenshtein distance measurement module
     '''
     def get_char_type(self, c):
-        return "others"
+        if (ord(c) >= ord("\u4E00") and ord(c) <= ord("\u9FA0")):
+            return "kanji"
+        else:
+            return "others"
 
     def measure(self, word1, word2):
         cdef int l_w1 = len(word1)
